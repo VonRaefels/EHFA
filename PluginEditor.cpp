@@ -20,10 +20,37 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
     // editor's size to whatever you need it to be.
 	setSize(450, 559);
 
-	addAndMakeVisible(frequencySlider);
-	frequencySlider.setRange(50, 5000.0);
-	frequencySlider.setTextValueSuffix(" Hz");
-	frequencySlider.addListener(this);
+	addAndMakeVisible(blendKnob);
+	blendKnob.setRange(50, 5000.0);
+	blendKnob.setTopLeftPosition(72, 88);
+	blendKnob.setSize(80, 80);
+
+	blendKnob.setSliderStyle(Slider::Rotary);
+	blendKnob.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	blendKnob.setLookAndFeel(&knoblf);
+	blendKnob.addListener(this);
+
+	addAndMakeVisible(fineKnob);
+	fineKnob.setRange(50, 5000.0);
+	fineKnob.setTopLeftPosition(72 + 113, 88);
+	fineKnob.setSize(80, 80);
+
+	fineKnob.setSliderStyle(Slider::Rotary);
+	fineKnob.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	fineKnob.setLookAndFeel(&knoblf);
+	fineKnob.addListener(this);
+
+	addAndMakeVisible(shiftKnob);
+	shiftKnob.setRange(50, 5000.0);
+	shiftKnob.setTopLeftPosition(72 + 113*2, 89);
+	shiftKnob.setSize(80, 80);
+
+	shiftKnob.setSliderStyle(Slider::Rotary);
+	shiftKnob.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	shiftKnob.setLookAndFeel(&knoblf);
+	shiftKnob.addListener(this);
+
+
 
 	addAndMakeVisible(onButton);
 	onButton.setAlpha(0);
@@ -64,14 +91,14 @@ void EhfaAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 	const int sliderLeft = 120;
-	frequencySlider.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
+	blendKnob.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
 }
 
 void EhfaAudioProcessorEditor::sliderValueChanged(Slider * slider)
 {
-	if (slider == &frequencySlider)
+	if (slider == &blendKnob)
 	{
-		processor.updateAngleDelta(frequencySlider.getValue());
+		processor.updateAngleDelta(blendKnob.getValue());
 	}
 }
 
@@ -82,3 +109,4 @@ void EhfaAudioProcessorEditor::buttonClicked(Button* button) {
 		repaint();
 	}
 }
+
