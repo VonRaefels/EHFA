@@ -57,9 +57,14 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 	void updateAngleDelta(double shift, double fine);
+	void setMix(double mix);
 
 	double currentAngle, angleDelta;
 	bool isOn, isFilterOn;
+	double mix;
+
+	const double DEFAULT_FREQ = 5050;
+	const double DEFAULT_MIX = 50;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EhfaAudioProcessor)

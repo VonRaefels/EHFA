@@ -29,6 +29,7 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	blendKnob.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
 	blendKnob.setLookAndFeel(&knoblf);
 	blendKnob.addListener(this);
+	blendKnob.setValue(processor.DEFAULT_MIX);
 
 	addAndMakeVisible(fineKnob);
 	fineKnob.setRange(0, 1000);
@@ -49,6 +50,7 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	shiftKnob.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
 	shiftKnob.setLookAndFeel(&knoblf);
 	shiftKnob.addListener(this);
+	shiftKnob.setValue(processor.DEFAULT_FREQ);
 
 	addAndMakeVisible(onButton);
 	onButton.setAlpha(0);
@@ -109,6 +111,7 @@ void EhfaAudioProcessorEditor::resized()
 
 void EhfaAudioProcessorEditor::sliderValueChanged(Slider * slider)
 {
+
 	if (slider == &shiftKnob)
 	{
 		processor.updateAngleDelta(shiftKnob.getValue(), fineKnob.getValue());
@@ -117,6 +120,10 @@ void EhfaAudioProcessorEditor::sliderValueChanged(Slider * slider)
 	if (slider == &fineKnob)
 	{
 		processor.updateAngleDelta(shiftKnob.getValue(), fineKnob.getValue());
+	}
+
+	if (slider == &blendKnob) {
+		processor.setMix(blendKnob.getValue());
 	}
 
 }

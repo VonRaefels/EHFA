@@ -20,8 +20,10 @@ EhfaAudioProcessor::EhfaAudioProcessor()
 	currentAngle = 0.0;
 	angleDelta = 0.0;
 
-	isOn = false;
+	isOn = true;
 	isFilterOn = false;
+	mix = this->DEFAULT_MIX;
+	updateAngleDelta(this->DEFAULT_FREQ, 0);
 }
 
 EhfaAudioProcessor::~EhfaAudioProcessor()
@@ -127,11 +129,17 @@ void EhfaAudioProcessor::updateAngleDelta(double shift, double fine)
 	angleDelta = cyclesPerSample * 2.0 * double_Pi;                                
 }
 
+void EhfaAudioProcessor::setMix(double mix) {
+	this->mix = mix;
+}
+
 void EhfaAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
 	if (!this->isOn)
 		return;
 
+	AudioSampleBuffer output = AudioSampleBuffer();
+	output.makeCopyOf(buffer, true);
 
 	const float level = 0.075f;
     const int totalNumInputChannels  = getTotalNumInputChannels();
@@ -146,7 +154,9 @@ void EhfaAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 
 		for (int i = totalNumOutputChannels; --i >= 0;) {
 			float input = buffer.getSample(i, startSample);
-			buffer.addSample(i, startSample, input * currentSample);
+			float ring = input*currentSample;
+			float out = (mix*ring + (100 - mix)*input) / 100;
+			buffer.addSample(i, startSample, out);
 		}
 
         currentAngle += angleDelta;
