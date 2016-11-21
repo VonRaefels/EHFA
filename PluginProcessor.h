@@ -59,7 +59,7 @@ public:
 	void updateAngleDelta(double frequency);
 
 	double currentAngle, angleDelta;
-	bool isOn;
+	bool isOn, isFilterOn;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EhfaAudioProcessor)

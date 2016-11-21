@@ -21,6 +21,7 @@ EhfaAudioProcessor::EhfaAudioProcessor()
 	angleDelta = 0.0;
 
 	isOn = false;
+	isFilterOn = false;
 }
 
 EhfaAudioProcessor::~EhfaAudioProcessor()

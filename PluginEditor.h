@@ -71,9 +71,10 @@ private:
     // access the processor object that created it.
     EhfaAudioProcessor& processor;
 	Slider blendKnob, fineKnob, shiftKnob;
-	Image background, on;
-	TextButton onButton;
+	Image backgroundImage, onImage, filterImage;
+	TextButton onButton, filterButton;
 	KnobLF knoblf;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EhfaAudioProcessorEditor)
 };
 

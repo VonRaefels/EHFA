@@ -50,8 +50,6 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	shiftKnob.setLookAndFeel(&knoblf);
 	shiftKnob.addListener(this);
 
-
-
 	addAndMakeVisible(onButton);
 	onButton.setAlpha(0);
 	juce::Rectangle<int> buttonBounds = onButton.getBounds();
@@ -62,10 +60,21 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	onButton.setButtonText("Hola");
 	onButton.addListener(this);
 
+	addAndMakeVisible(filterButton);
+	filterButton.setAlpha(0);
+	juce::Rectangle<int> buttonBounds2 = filterButton.getBounds();
+	buttonBounds2.setPosition(213, 213);
+	buttonBounds2.setBottom(240);
+	buttonBounds2.setRight(240);
+	filterButton.setBounds(buttonBounds2);
+	filterButton.addListener(this);
+
 	File back = File("C:\\Users\\IceCreamTaco\\Documents\\SMC\\Schematics\\ehfa(400).png");
 	File onF = File("C:\\Users\\IceCreamTaco\\Documents\\SMC\\Schematics\\ehfa(OFF).png");
-	background = ImageCache::getFromFile(back);
-	on = ImageCache::getFromFile(onF);
+	File filterF = File("C:\\Users\\IceCreamTaco\\Documents\\SMC\\Schematics\\ehfa(400_filter).png");
+	backgroundImage = ImageCache::getFromFile(back);
+	onImage = ImageCache::getFromFile(onF);
+	filterImage = ImageCache::getFromFile(filterF);
 }
 
 EhfaAudioProcessorEditor::~EhfaAudioProcessorEditor()
@@ -80,9 +89,13 @@ void EhfaAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::black);
     g.setFont (15.0f);
     //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
-	g.drawImageAt(background, 0, 0);
+	Image bI = backgroundImage;
+	if (processor.isFilterOn) {
+		bI = filterImage;
+	}
+	g.drawImageAt(bI, 0, 0);
 	if (!processor.isOn) {
-		g.drawImageAt(on, 0, 0);
+		g.drawImageAt(onImage, 0, 0);
 	}
 }
 
@@ -106,6 +119,10 @@ void EhfaAudioProcessorEditor::sliderValueChanged(Slider * slider)
 void EhfaAudioProcessorEditor::buttonClicked(Button* button) {
 	if (button == &onButton) {
 		processor.isOn = !processor.isOn;
+		repaint();
+	}
+	if (button == &filterButton) {
+		processor.isFilterOn = !processor.isFilterOn;
 		repaint();
 	}
 }
