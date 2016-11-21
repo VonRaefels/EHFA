@@ -87,7 +87,7 @@ void EhfaAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-	updateAngleDelta(440.0);
+	updateAngleDelta(0, 0);
 }
 
 void EhfaAudioProcessor::releaseResources()
@@ -121,9 +121,9 @@ bool EhfaAudioProcessor::setPreferredBusArrangement (bool isInput, int bus, cons
 }
 #endif
 
-void EhfaAudioProcessor::updateAngleDelta(double frequency)
+void EhfaAudioProcessor::updateAngleDelta(double shift, double fine)
 {
-	const double cyclesPerSample = frequency / getSampleRate();
+	const double cyclesPerSample = (shift + fine) / getSampleRate();
 	angleDelta = cyclesPerSample * 2.0 * double_Pi;                                
 }
 

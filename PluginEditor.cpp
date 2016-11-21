@@ -21,7 +21,7 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	setSize(450, 559);
 
 	addAndMakeVisible(blendKnob);
-	blendKnob.setRange(50, 5000.0);
+	blendKnob.setRange(0, 100);
 	blendKnob.setTopLeftPosition(72, 88);
 	blendKnob.setSize(80, 80);
 
@@ -31,7 +31,7 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	blendKnob.addListener(this);
 
 	addAndMakeVisible(fineKnob);
-	fineKnob.setRange(50, 5000.0);
+	fineKnob.setRange(0, 1000);
 	fineKnob.setTopLeftPosition(72 + 113, 88);
 	fineKnob.setSize(80, 80);
 
@@ -41,7 +41,7 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	fineKnob.addListener(this);
 
 	addAndMakeVisible(shiftKnob);
-	shiftKnob.setRange(50, 5000.0);
+	shiftKnob.setRange(100, 10000.0);
 	shiftKnob.setTopLeftPosition(72 + 113*2, 89);
 	shiftKnob.setSize(80, 80);
 
@@ -103,16 +103,22 @@ void EhfaAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-	const int sliderLeft = 120;
-	blendKnob.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
+	//const int sliderLeft = 120;
+	//blendKnob.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
 }
 
 void EhfaAudioProcessorEditor::sliderValueChanged(Slider * slider)
 {
-	if (slider == &blendKnob)
+	if (slider == &shiftKnob)
 	{
-		processor.updateAngleDelta(blendKnob.getValue());
+		processor.updateAngleDelta(shiftKnob.getValue(), fineKnob.getValue());
 	}
+
+	if (slider == &fineKnob)
+	{
+		processor.updateAngleDelta(shiftKnob.getValue(), fineKnob.getValue());
+	}
+
 }
 
 
