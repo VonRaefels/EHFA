@@ -77,6 +77,8 @@ EhfaAudioProcessorEditor::EhfaAudioProcessorEditor (EhfaAudioProcessor& p)
 	backgroundImage = ImageCache::getFromFile(back);
 	onImage = ImageCache::getFromFile(onF);
 	filterImage = ImageCache::getFromFile(filterF);
+
+	startTimer(100);
 }
 
 EhfaAudioProcessorEditor::~EhfaAudioProcessorEditor()
@@ -92,11 +94,11 @@ void EhfaAudioProcessorEditor::paint (Graphics& g)
     g.setFont (15.0f);
     //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 	Image bI = backgroundImage;
-	if (processor.isFilterOn) {
+	if (*processor.filterOnParameter) {
 		bI = filterImage;
 	}
 	g.drawImageAt(bI, 0, 0);
-	if (!processor.isOn) {
+	if (!*processor.onParameter) {
 		g.drawImageAt(onImage, 0, 0);
 	}
 }
@@ -109,11 +111,16 @@ void EhfaAudioProcessorEditor::resized()
 	//blendKnob.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
 }
 
+void EhfaAudioProcessorEditor::timerCallback(){
+	blendKnob.setValue(*processor.mixParameter);
+}
+
 void EhfaAudioProcessorEditor::sliderValueChanged(Slider * slider)
 {
-
+	
 	if (slider == &shiftKnob)
 	{
+		*processor.shiftParameter = shiftKnob.getValue();
 		processor.updateAngleDelta(shiftKnob.getValue(), fineKnob.getValue());
 	}
 
@@ -131,11 +138,11 @@ void EhfaAudioProcessorEditor::sliderValueChanged(Slider * slider)
 
 void EhfaAudioProcessorEditor::buttonClicked(Button* button) {
 	if (button == &onButton) {
-		processor.isOn = !processor.isOn;
+		*processor.onParameter = !*processor.onParameter;
 		repaint();
 	}
 	if (button == &filterButton) {
-		processor.isFilterOn = !processor.isFilterOn;
+		*processor.filterOnParameter= !*processor.filterOnParameter;
 		repaint();
 	}
 }

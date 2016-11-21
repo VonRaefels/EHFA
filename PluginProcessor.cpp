@@ -15,15 +15,21 @@ Random random;
 
 //==============================================================================
 EhfaAudioProcessor::EhfaAudioProcessor()
+	: onParameter(nullptr),
+	filterOnParameter(nullptr),
+	mixParameter(nullptr),
+	shiftParameter(nullptr)
 {
 	random = Random();
 	currentAngle = 0.0;
 	angleDelta = 0.0;
 
-	isOn = true;
-	isFilterOn = false;
-	mix = this->DEFAULT_MIX;
 	updateAngleDelta(this->DEFAULT_FREQ, 0);
+
+	addParameter(onParameter = new AudioParameterBool("on", "On", true));
+	addParameter(filterOnParameter = new AudioParameterBool("filter", "Filter On", false));
+	addParameter(mixParameter = new AudioParameterFloat("mix", "Blend", 0.0f, 100.0f, 50.0f));
+	addParameter(shiftParameter = new AudioParameterFloat("shift", "Shift", 100.0f, 10000.0f, 5050.0f));
 }
 
 EhfaAudioProcessor::~EhfaAudioProcessor()
@@ -129,13 +135,13 @@ void EhfaAudioProcessor::updateAngleDelta(double shift, double fine)
 	angleDelta = cyclesPerSample * 2.0 * double_Pi;                                
 }
 
-void EhfaAudioProcessor::setMix(double mix) {
-	this->mix = mix;
+void EhfaAudioProcessor::setMix(float mix) {
+	*mixParameter = mix;
 }
 
 void EhfaAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-	if (!this->isOn)
+	if (!*onParameter)
 		return;
 
 	AudioSampleBuffer output = AudioSampleBuffer();
@@ -155,7 +161,7 @@ void EhfaAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 		for (int i = totalNumOutputChannels; --i >= 0;) {
 			float input = buffer.getSample(i, startSample);
 			float ring = input*currentSample;
-			float out = (mix*ring + (100 - mix)*input) / 100;
+			float out = ((*mixParameter)*ring + (100 - (*mixParameter))*input) / 100;
 			buffer.addSample(i, startSample, out);
 		}
 

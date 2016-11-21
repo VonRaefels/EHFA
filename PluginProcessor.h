@@ -17,6 +17,7 @@
 //==============================================================================
 /**
 */
+
 class EhfaAudioProcessor  : public AudioProcessor
 {
 public:
@@ -57,11 +58,14 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 	void updateAngleDelta(double shift, double fine);
-	void setMix(double mix);
+	void setMix(float mix);
 
 	double currentAngle, angleDelta;
-	bool isOn, isFilterOn;
-	double mix;
+
+	AudioParameterFloat* shiftParameter;
+	AudioParameterFloat* mixParameter;
+	AudioParameterBool* onParameter;
+	AudioParameterBool* filterOnParameter;
 
 	const double DEFAULT_FREQ = 5050;
 	const double DEFAULT_MIX = 50;

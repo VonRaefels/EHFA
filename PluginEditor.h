@@ -53,7 +53,7 @@ public:
 };
 
 class EhfaAudioProcessorEditor  : public AudioProcessorEditor,
-	public Button::Listener, public Slider::Listener
+	public Button::Listener, public Slider::Listener, private Timer
 {
 public:
     EhfaAudioProcessorEditor (EhfaAudioProcessor&);
@@ -66,6 +66,9 @@ public:
 private:
 	void sliderValueChanged(Slider* slider) override;
 	void buttonClicked(Button* button) override;
+
+	void timerCallback() override;
+
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
