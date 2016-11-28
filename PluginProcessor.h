@@ -61,6 +61,10 @@ public:
 	void setMix(float mix);
 
 	double currentAngle, angleDelta;
+	float l1, l2;
+	float o1, o2;
+	float b1 = 0.05, b2 = 0, b3 = -0.0475;
+	float a1 = 1.0, a2 = -1.9, a3 = 0.9025;
 
 	AudioParameterFloat* shiftParameter;
 	AudioParameterFloat* mixParameter;

@@ -94,7 +94,7 @@ void EhfaAudioProcessorEditor::paint (Graphics& g)
     g.setFont (15.0f);
     //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 	Image bI = backgroundImage;
-	if (*processor.filterOnParameter) {
+	if (!*processor.filterOnParameter) {
 		bI = filterImage;
 	}
 	g.drawImageAt(bI, 0, 0);

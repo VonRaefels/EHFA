@@ -96,6 +96,10 @@ void EhfaAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 	updateAngleDelta(0, 0);
+	l1 = 0;
+	l2 = 0;
+	o1 = 0;
+	o2 = 0;
 }
 
 void EhfaAudioProcessor::releaseResources()
@@ -161,7 +165,22 @@ void EhfaAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuffer& mid
 		for (int i = totalNumOutputChannels; --i >= 0;) {
 			float input = buffer.getSample(i, startSample);
 			float ring = input*currentSample;
-			float out = ((*mixParameter)*ring + (100 - (*mixParameter))*input) / 100;
+
+			float x1, x2 = l1, x3 = l2;
+			float y2 = o1, y3 = o2;
+			x1 = ring;
+			float y = ring;
+
+			if (*filterOnParameter) {
+				y = b1*x1 + b2*x2 + b3*x3 - a2*y2 - a3*y3;
+			}
+
+			l1 = x1;
+			l2 = x2;
+			o1 = y;
+			o2 = y2;
+
+			float out = ((*mixParameter)*y + (100 - (*mixParameter))*input) / 100;
 			buffer.addSample(i, startSample, out);
 		}
 
